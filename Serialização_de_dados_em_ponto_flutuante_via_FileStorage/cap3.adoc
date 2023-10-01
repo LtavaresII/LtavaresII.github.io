@@ -56,7 +56,7 @@ Saida em PNG:
 
 :imagesdir:
 
-. Imagem gerada pelo programa filestorage.
+.Imagem gerada pelo programa filestorage.
 
 image::senoide-256(127).png[senoide-256(127)]
 
