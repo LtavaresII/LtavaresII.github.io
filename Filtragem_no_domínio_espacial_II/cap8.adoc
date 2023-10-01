@@ -131,7 +131,7 @@ image::Captura de tela_2023-09-28_19-01-31.png[Captura de tela_2023-09-28_19-01-
 
 == *Problema 2:*
 
-O problema consiste em modificar o programa tiltshift para que ele aplique o mesmo efeito em vídeos.
+O problema consiste em modificar o programa tilt-shift para que ele aplique o mesmo efeito em vídeos.
 
 Programa tiltshiftvideo.cpp:
 [source,C++]
@@ -207,8 +207,8 @@ A principal mudança é que ao invés de modificar os parâmetros por trackbars,
 
 Link do vídeo utilizado:
 
-video::ABzDOSQkhTM[youtube]
+video::ABzDOSQkhTM[youtube,width=640,height=480]
 
-Link do vídeo com o efeito tiltshift:
+Link do vídeo com o efeito tilt-shift:
 
-video::OmAQV7e5-Jw[youtube]
+video::OmAQV7e5-Jw[youtube,width=640,height=480]
