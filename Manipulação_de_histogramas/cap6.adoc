@@ -103,11 +103,13 @@ image::gray.png[gray]
 
 :imagesdir:
 
-:imagesdir:
-
-.imagens em tons de cinza com o histograma equalizado, com variação de luzes (apagada e acessa).
+.imagem em tons de cinza com o histograma equalizado, com variação de luzes (apagada).
 
 image::equalized.png[equalized]
+
+:imagesdir:
+
+.imagem em tons de cinza com o histograma equalizado, com variação de luzes (acessa).
 
 image::equalized(2).png[equalized(2)]
 
