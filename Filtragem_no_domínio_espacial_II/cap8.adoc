@@ -1,0 +1,214 @@
+:toc: left
+:source-highlighter: highlightjs
+
+= Filtragem no domínio espacial II
+
+== *Problema 1:*
+
+O problema consiste em criar um programa que realize o tilt-shift em uma imagem, esse efeito deve ser alterado por trackbars que ajustaram a altura de região central que entrará em foco, a força do decaimento de região da borda e regular a posição vertical do centro da região que entrará em foco.
+
+Programa tiltshift.cpp:
+[source,C++]
+----
+#include <iostream>
+#include <cstdio>
+#include <cmath>
+#include <opencv2/opencv.hpp>
+
+double alfa;
+int alfa_slider = 0;
+int alfa_slider_max = 100;
+
+int top_slider = 0;
+int top_slider_max = 100;
+
+int center_slider = 0;
+int center_slider_max = 100;
+
+cv::Mat image1, image2, blended;
+cv::Mat imageTop; 
+
+char TrackbarName[50];
+
+void on_trackbar_blend(int, void*){
+ alfa = (double) alfa_slider/alfa_slider_max ;
+ cv::addWeighted(image2, 1-alfa, imageTop, alfa, 0.0, blended);
+ cv::imshow("Tilt Shift", blended);
+}
+
+void on_trackbar_line(int, void*){
+  image2.copyTo(imageTop);
+
+  int width = image2.size().width;
+  int height = image2.size().height;
+  int limit = top_slider*height/100;
+  int base = center_slider*height/100;
+
+  if(limit > 0){
+    if(base >=0 && base <= height-limit){
+      cv::Mat tmp = image1(cv::Rect(0, base, width, limit));
+      tmp.copyTo(imageTop(cv::Rect(0, base, width, limit)));
+    }else{
+      cv::Mat tmp = image1(cv::Rect(0, 0, width, limit));
+      tmp.copyTo(imageTop(cv::Rect(0, 0, width, limit)));
+    }
+  }
+  on_trackbar_blend(alfa_slider,0);
+}
+
+int main(int argvc, char** argv){
+  image1 = cv::imread("blend2.jpg");
+  image1.copyTo(image2);
+  cv::namedWindow("Tilt Shift", 1);
+  image2.convertTo(image2, CV_32F);
+
+  float media[] = {1,1,1,
+                    1,1,1,
+                    1,1,1};
+
+  cv::Mat mask = cv::Mat(3,3,CV_32F,media);
+  scaleAdd(mask,1/9.0, cv::Mat::zeros(3,3,CV_32F),mask);
+
+  for(int i=0; i<8; i++){   cv::filter2D(image2,image2,image2.depth(),mask,cv::Point(1,1),0);
+  }
+
+  image2.convertTo(image2, CV_8U);
+  image2.copyTo(imageTop);
+
+  std::sprintf( TrackbarName, "Decay x %d", alfa_slider_max );
+  cv::createTrackbar( TrackbarName, "Tilt Shift",
+                      &alfa_slider,
+                      alfa_slider_max,
+                      on_trackbar_blend );
+  on_trackbar_blend(alfa_slider, 0 );
+  
+  std::sprintf( TrackbarName, "Height x %d", top_slider_max );
+  cv::createTrackbar( TrackbarName, "Tilt Shift",
+                      &top_slider,
+                      top_slider_max,
+                      on_trackbar_line );
+  on_trackbar_line(top_slider, 0 );
+
+  std::sprintf( TrackbarName, "Center x %d", top_slider_max );
+  cv::createTrackbar( TrackbarName, "Tilt Shift",
+                      &center_slider,
+                      center_slider_max,
+                      on_trackbar_line );
+  on_trackbar_line(center_slider, 0 );
+
+  cv::waitKey(0);
+  cv::imwrite("tiltshift.jpg", blended);
+  return 0;
+}
+
+----
+
+O efeito tiltshift foi alcançado através do ponderamento entre a soma da imagem borrada por um filtro media, ponderada por 1-alfa, com a imagem original, ponderada por alfa. Alfa é obtida por: 
+
+:imagesdir:
+
+image::alpha.png[alpha]
+
+Onde l1 e l2 alteram a distância da janela e d é a força do decaimento da região e x é o eixo vertical da imagem.
+
+:imagesdir:
+
+.Imagem original.
+
+image::blend2.png[blend2]
+
+:imagesdir:
+
+.Imagem com efeito tilt-shift.
+
+image::tiltshift.png[tiltshift]
+
+:imagesdir:
+
+.Parâmetros do tilt-shift.
+
+image::Captura de tela_2023-09-28_19-01-31.png[Captura de tela_2023-09-28_19-01-31]
+
+== *Problema 2:*
+
+O problema consiste em modificar o programa tiltshift para que ele aplique o mesmo efeito em vídeos.
+
+Programa tiltshiftvideo.cpp:
+[source,C++]
+----
+#include <iostream>
+#include <cstdio>
+#include <cmath>
+#include <opencv2/opencv.hpp>
+
+int main(int argvc, char** argv){
+  cv::VideoCapture cap;
+  cv::Mat frame, result, blur, lixo, frame2, blur2;
+  float l1, l2, d = 85.0, tmp;
+  int width, height;
+
+  cap.open("Imagens Incríveis da Natureza.mp4");
+
+  if(!cap.isOpened()){
+    return -1;
+  }
+
+  cap.set(cv::CAP_PROP_FRAME_WIDTH, 640);
+  cap.set(cv::CAP_PROP_FRAME_HEIGHT, 480);  
+  width = cap.get(cv::CAP_PROP_FRAME_WIDTH);
+  height = cap.get(cv::CAP_PROP_FRAME_HEIGHT);
+
+  l1 = height/3.0; 
+  l2 = height-l1;
+
+  cv::VideoWriter video("tiltshift.avi", cv::VideoWriter::fourcc('M','J','P','G'),30,cv::Size(width,height),true);
+  if(!video.isOpened()){
+    return -1;
+  }
+
+  while(1){
+    cap >> frame;
+    cv::Mat pOrig(frame.size(),CV_32F);
+    cv::Mat pBlur(frame.size(),CV_32F);
+
+    cv::GaussianBlur(frame,blur,cv::Size(9,9),0,0);
+
+    for(int x = 0; x< pOrig.rows; x++){
+      tmp = 1/2.0 * (tanh((x-l1)/d) - tanh((x-l2)/d));
+      for(int y = 0; y< pOrig.cols;y++){
+        pOrig.at<float>(x,y) = tmp;
+        pBlur.at<float>(x,y) = (1-tmp);
+      }
+    }
+    cv::Mat cannel_orig[3], cannel_blur[3];
+    cv::split(frame, cannel_orig);
+    cv::split(blur, cannel_blur);
+
+    for(int i=0; i<3; i++){
+      cv::multiply(cannel_orig[i],pOrig,cannel_orig[i],1,CV_8UC3);
+      cv::multiply(cannel_blur[i],pBlur,cannel_blur[i],1,CV_8UC3);
+    }
+
+    merge(cannel_orig,3,frame2);
+    merge(cannel_blur,3,blur2);
+
+    result = frame2+blur2;
+
+    video.write(result);
+    cap >> lixo >> lixo;
+  }
+
+  return 0;
+}
+
+----
+
+A principal mudança é que ao invés de modificar os parâmetros por trackbars, eles já estão pré-definidos. Para dar um efeito de velocidade foram pulados dois frames durante a aplicação do efeito.
+
+Link do vídeo utilizado:
+
+video::ABzDOSQkhTM?si=77VAVmcXh-nv3GwT[youtube]
+
+Link do vídeo com o efeito tiltshift:
+
+video::OmAQV7e5-Jw[youtube]
