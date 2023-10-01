@@ -1,0 +1,10 @@
+:toc: left
+:source-highlighter: highlightjs
+
+= Decomposição de imagens em planos de bits
+
+O problema consiste em escrever um programa que recupere a imagem resultante de esteganografia.
+
+:imagesdir:
+
+.desafio-esteganografia.png é a imagem de entrada. 

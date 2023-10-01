@@ -54,6 +54,8 @@ int main(int argc, char** argv) {
 
 Saida em PNG:
 
+:imagesdir:
+
 . Imagem gerada pelo programa filestorage.
 
 image::senoide-256(127).png[senoide-256(127)]
