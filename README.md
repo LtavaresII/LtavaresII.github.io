@@ -10,4 +10,5 @@ Temas dos Exercícios:
 7. Filtragem no domínio espacial II;
 
 Os exercícios foram desenvolvidos em linguagem C++, utilizando sistema operacional Manjaro.
+
 Página Web: https://ltavaresii.github.io
