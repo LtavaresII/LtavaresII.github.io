@@ -115,13 +115,13 @@ Onde l1 e l2 alteram a distância da janela e d é a força do decaimento da reg
 
 .Imagem original.
 
-image::blend2.png[blend2]
+image::blend2.jpg[blend2]
 
 :imagesdir:
 
 .Imagem com efeito tilt-shift.
 
-image::tiltshift.png[tiltshift]
+image::tiltshift.jpg[tiltshift]
 
 :imagesdir:
 
@@ -207,7 +207,7 @@ A principal mudança é que ao invés de modificar os parâmetros por trackbars,
 
 Link do vídeo utilizado:
 
-video::ABzDOSQkhTM?si=77VAVmcXh-nv3GwT[youtube]
+video::ABzDOSQkhTM[youtube]
 
 Link do vídeo com o efeito tiltshift:
 
