@@ -49,7 +49,7 @@ int main(int argc, char** argv) {
 
 ----
 
-A técnica morfologica utilizada para fechar os espaços entre os digitos foi o fechamento da imagem.
+A técnica morfologica utilizada para fechar os espaços entre os digitos foi o fechamento da imagem. Onde a image teve os bits invertidos, para inverter a cor da imagem, cria o elemento estruturante, que é uma linha na vertical, realiza o fechamento com esse elemento e por fim reverte os bits da imagem.
 
 :imagesdir:
 

@@ -11,6 +11,11 @@ Exercícios de processamento digital de imagens com o OpenCV. Temas dos Exercici
 5. link:Manipulação_de_histogramas/cap6.html[Manipulação de histogramas]
 6. link:Filtragem_no_domínio_espacial_I/cap7.html[Filtragem no domínio espacial I]
 7. link:Filtragem_no_domínio_espacial_II/cap8.html[Filtragem no domínio espacial II]
+8. link:Transformada_Discreta_de_Fourier/cap9.html[Transformada Discreta de Fourier]
+9. link:Filtragem_no_Domínio_da_Frequência/cap10.html[Filtragem no Domínio da Frequência]
+10. link:Detecção_de_bordas_com_o_algoritmo_de_Canny/cap11.html[Detecção de bordas com o algoritmo de Canny]
+11. link:Quantização_vetorial_com_k-means/cap12.html[Quantização vetorial com k-means]
+12. link:Filtragem_de_forma_com_morfologia_matemática/cap13.html[Filtragem de forma com morfologia matemática]
 
 
 
